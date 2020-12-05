@@ -16,10 +16,16 @@ router.get('/docs', swaggerUI.setup(swaggerFile));
 
 router.get(
   '/orders/:id_order',
+  checkJWTToken,
   orders_controller.show
 );
+router.get('/all_orders',
+  checkJWTToken,
+  orders_controller.allClienteOrders
+)
 router.post(
   '/orders',
+  checkJWTToken,
   orders_controller.create
 );
 

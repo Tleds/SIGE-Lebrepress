@@ -1,15 +1,18 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 
 import api from '../../services/api';
 
 import { Input, Form, Select, SubTitle, Label, Button } from './styles';
 
-function Home(props) {
+function Order(props) {
   
   const [salesmanCode, setSalesmanCode] = useState('');
   const [CNPJClient, setCNPJClient] = useState('');
   const [loadSize, setLoadSize] = useState('');
   const [loadType, setLoadType] = useState('');
+  const [userData, setUserData] = useState({});
+
+  const [clientAddress, setClientAddress] = useState({});
 
   const [cepOrigin, setCepOrigin] = useState('');
   const [addressOrigin, setAddressOrigin] = useState('');
@@ -49,6 +52,8 @@ function Home(props) {
       );
     const response = await api.post('/orders',{
         sales_man_code: salesmanCode,
+        id_user: userData.id,
+        api_key: userData.api_key,
         cnpj_client: CNPJClient, 
         load_size: loadSize,
         load_type: loadType,
@@ -66,6 +71,11 @@ function Home(props) {
         neighborhood_destiny: neighborhoodOrigin,
         city_destiny: cityDestiny,
         state_destiny: stateDestiny
+    },{
+      headers: {
+        authentication: `Bearer ${localStorage.getItem('token')}`
+      },
+      validateStatus: false
     });
 
     if(response.status === 200){
@@ -107,6 +117,63 @@ function Home(props) {
       
     }
   }
+  const handleUserAddressDestiny = async (e)=>{
+    e.preventDefault();
+    handleCEPDestinyChange(clientAddress.zip_code);
+    setAddressDestiny(clientAddress.street);
+    setNumberDestiny(clientAddress.number);
+    setComplementDestiny(clientAddress.complement);
+    setNeighborhoodDestiny(clientAddress.neighborhood);
+    setCityDestiny(clientAddress.city);
+    setStateDestiny(clientAddress.state);
+    return;
+  }
+  const handleUserAddressOrigin = async (e)=>{
+    e.preventDefault();
+    handleCEPOriginChange(clientAddress.zip_code);
+    setAddressOrigin(clientAddress.street);
+    setNumberOrigin(clientAddress.number);
+    setComplementOrigin(clientAddress.complement);
+    setNeighborhoodOrigin(clientAddress.neighborhood);
+    setCityOrigin(clientAddress.city);
+    setStateOrigin(clientAddress.state);
+    return;
+  }
+  
+  useEffect(()=>{
+    async function loadUser(){
+      const response = await api.get('/users',{
+        headers:{
+          authentication: `Bearer ${localStorage.getItem('token')}`,
+        },
+        validateStatus: false,
+      });
+      console.log(response.data)
+      if(response.status === 401){
+        props.history.push('/');
+        return;
+      }
+      if(response.status === 400){
+        alert(response.data.message);
+        return;
+      }
+      if(response.status === 500){
+        props.history.push('/');
+        return;
+      }
+      if(response.status === 200){
+        setUserData({
+          id: response.data.id,
+          name: response.data.name,
+          cnpj: response.data.cnpj,
+          api_key: response.data.api_key,
+        });
+        setCNPJClient(userData.cnpj);
+        setClientAddress(response.data.address);
+      }
+    }
+    loadUser();
+  },[]);
   return (
     <Form>
       <SubTitle>Formulário de registro do pedido</SubTitle>
@@ -117,10 +184,9 @@ function Home(props) {
         type="text"
         value={salesmanCode}
         onChange={(e)=>setSalesmanCode(e.target.value)}
-        required
       />
       </Label>
-      <Label> CNPJ do cliente:
+      <Label> CNPJ do cliente*:
       <Input 
         placeholder="Ex:11295534000109"
         type="text"
@@ -129,7 +195,7 @@ function Home(props) {
         required
       />
       </Label>
-      <Label> Tamanho da carga (Ton):
+      <Label> Tamanho da carga (Ton)*:
       <Input 
         placeholder="Ex:10"
         type="number"
@@ -138,7 +204,7 @@ function Home(props) {
         required
       />
       </Label>
-      <Label>Tipo de carga:
+      <Label>Tipo de carga*:
       <Select 
         value={loadType}
         onChange={(e)=>setLoadType(e.target.value)}
@@ -152,14 +218,18 @@ function Home(props) {
       </Select>
       </Label>
       <SubTitle>Endereço de origem da carga</SubTitle>
-      <Label>CEP:
+      <Button
+        type="button"
+        onClick={(e)=>handleUserAddressOrigin(e)}
+      >É o meu endereço</Button>
+      <Label>CEP*:
         <Input 
           placeholder="Ex:12345678"
           onChange={(e)=> handleCEPOriginChange(e.target.value)}
           required
         />
       </Label>
-      <Label>Endereço:
+      <Label>Endereço*:
         <Input 
           placeholder="Ex:Avenida 1"
           value={addressOrigin}
@@ -167,7 +237,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Número:
+      <Label>Número*:
         <Input 
           placeholder="Ex:100"
           value={numberOrigin}
@@ -175,7 +245,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Complemento:
+      <Label>Complemento*:
         <Input 
           placeholder="Ex:Doca 2"
           value={complementOrigin}
@@ -183,7 +253,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Bairro:
+      <Label>Bairro*:
         <Input 
           placeholder="Ex:Barreiro"
           value={neighborhoodOrigin}
@@ -191,7 +261,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Cidade:
+      <Label>Cidade*:
         <Input 
           placeholder="Ex:Belo Horizonte"
           value={cityOrigin}
@@ -199,7 +269,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Estado
+      <Label>Estado*
         <Select 
           value={stateOrigin}
           onChange={(e)=> setStateOrigin(e.target.value)}
@@ -236,14 +306,18 @@ function Home(props) {
         </Select>
       </Label>
       <SubTitle>Endereço de destino da carga</SubTitle>
-      <Label>CEP:
+      <Button
+        type="button"
+        onClick={(e)=>handleUserAddressDestiny(e)}
+      >É o meu endereço</Button>
+      <Label>CEP*:
         <Input 
           placeholder="CEP..."
           onChange={(e)=> handleCEPDestinyChange(e.target.value)}
           required
         />
       </Label>
-      <Label>Endereço:
+      <Label>Endereço*:
         <Input 
           placeholder="Endereço..."
           value={addressDestiny}
@@ -251,7 +325,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Número:
+      <Label>Número*:
         <Input 
           placeholder="Número..."
           value={numberDestiny}
@@ -259,7 +333,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Complemento:
+      <Label>Complemento*:
         <Input 
           placeholder="Complemento..."
           value={complementDestiny}
@@ -267,7 +341,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Bairro:
+      <Label>Bairro*:
         <Input 
           placeholder="Bairro..."
           value={neighborhoodDestiny}
@@ -275,7 +349,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Cidade:
+      <Label>Cidade*:
         <Input 
           placeholder="Cidade..."
           value={cityDestiny}
@@ -283,7 +357,7 @@ function Home(props) {
           required
         />
       </Label>
-      <Label>Estado
+      <Label>Estado*
         <Select
          placeholder="Estado..."
          value={stateDestiny}
@@ -327,4 +401,4 @@ function Home(props) {
   );
 }
 
-export default Home;
+export default Order;

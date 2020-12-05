@@ -20,6 +20,6 @@
   },
   "scripts": {
     "dev": "nodemon src/server.js",
-    "swagger-autogen":"node src/swagger.js"
+    "swagger-autogen": "node src/swagger.js"
   }
 }

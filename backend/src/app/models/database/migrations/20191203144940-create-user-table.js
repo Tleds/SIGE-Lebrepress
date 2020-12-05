@@ -9,6 +9,11 @@ module.exports = {
          primaryKey: true,
          defaultValue: Sequelize.fn('uuid_generate_v4'),
        },
+       api_key: {
+        type: Sequelize.UUID,
+        allowNull:false,
+        defaultValue: Sequelize.fn('uuid_generate_v4'),
+       },
        cnpj:{
          type: Sequelize.STRING(14),
          allowNull: false,

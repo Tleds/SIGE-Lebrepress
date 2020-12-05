@@ -6,6 +6,7 @@ class Orders extends Model {
       {
         sales_man_code: DataTypes.STRING(30),
         cnpj_client: DataTypes.STRING(14),
+        api_key: DataTypes.UUID,
         load_size: DataTypes.STRING(5),
         load_type: DataTypes.STRING(50),
         cep_origin: DataTypes.STRING(8),
@@ -32,6 +33,15 @@ class Orders extends Model {
         tableName: 'orders',
       }
     );
+  }
+  static associate(models){
+    this.belongsTo(models.Users,{
+      foreignKey: 'id_user',
+      as:'user',
+      onDelete:'CASCADE',
+      onUpdate:'CASCADE',
+      hooks: true,
+    })
   }
 }
 

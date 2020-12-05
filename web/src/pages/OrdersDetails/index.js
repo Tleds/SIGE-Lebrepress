@@ -2,9 +2,6 @@ import React, { useEffect, useState} from 'react';
 
 import api from '../../services/api';
 
-import { Container } from './styles';
-
-
 function OrdersDetails(props) {
   const [tripDuration, setTripDuration] = useState('');
   const [tripDistance, setTripDistance] = useState('');
@@ -14,8 +11,12 @@ function OrdersDetails(props) {
   useEffect(()=>{
     async function loadData(){
       
-      const response = await api.get(`/orders/${props.location.state.id_order}`);
-      console.log(response.data);
+      const response = await api.get(`/orders/${props.location.state.id_order}`,{
+        headers:{
+          authentication: `Bearer ${localStorage.getItem('token')}`
+        },
+        validateStatus: false,
+      });
       setTripDistance(response.data.trip_distance);
       setTripDuration(response.data.trip_duration);
       setTripPrice(response.data.price);

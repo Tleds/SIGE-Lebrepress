@@ -19,11 +19,30 @@ class OrdersController {
       })
     }
   }
+  async allClienteOrders(req,res){
+    try {
+      const response = await Order.findAll({
+        where: { id_user: req.userId },
+        attributes:['id', 'nfe_id','trip_distance', 'trip_duration','price','load_size','load_type'],
+        raw: true,
+      });
+      const responseNFE = await Invoice.findById(response.nfe_id);
+
+      return res.status(200).json({
+        order: response,
+        nfe_date: responseNFE,
+      })
+    } catch (e) {
+      return res.status(500).json('Internal server error');
+    }
+  }
   async create(req,res){
     try{
     let {
       sales_man_code, 
       cnpj_client,
+      id_user,
+      api_key,
       load_size, 
       load_type,
       cep_origin,
@@ -41,7 +60,7 @@ class OrdersController {
       city_destiny, 
       state_destiny,
     } = req.body;
-
+    console.log(req.body);
     let originString = street_origin.replace(' ','+') + '+' +number_origin + '+' +neighborhood_origin.replace(' ','+') + '+' +city_origin.replace(' ','+') + '+' + state_origin;
     let destinyString = street_destiny.replace(' ','+') + '+' +number_destiny + '+' +neighborhood_destiny.replace(' ','+') + '+' +city_destiny.replace(' ','+') + '+' + state_destiny;
 
@@ -61,6 +80,8 @@ class OrdersController {
 
     const responseOrder = await Order.create({
       sales_man_code, 
+      id_user,
+      api_key,
       cnpj_client,
       load_size, 
       load_type,

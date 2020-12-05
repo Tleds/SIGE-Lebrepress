@@ -18,15 +18,6 @@ class UserAddress extends Model {
       }
     );
   }
-  static associate(models){
-    this.belongsTo(models.Users,{
-      foreignKey: 'id_user',
-      as:'users',
-      onDelete:'CASCADE',
-      onUpdate:'CASCADE',
-      hooks: true,
-    })
-  }
 }
 
 module.exports = UserAddress;

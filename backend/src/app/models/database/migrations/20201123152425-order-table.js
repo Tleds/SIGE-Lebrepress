@@ -17,9 +17,13 @@ module.exports = {
           as: 'users',
         },
        },
+       api_key:{
+        type: Sequelize.UUID,
+        allowNull: false,
+       },
       sales_man_code: {
         type: Sequelize.STRING(30),
-        allowNull: false,
+        allowNull: true,
       },
       cnpj_client: {
         type: Sequelize.STRING(14),

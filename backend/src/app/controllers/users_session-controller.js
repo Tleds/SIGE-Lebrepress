@@ -16,7 +16,7 @@ class UsersSession {
       }
 
       if (!(await userExist.checkPassword(password))) {
-        return res.status(401).json({ message: 'Senha inválida' });
+        return res.status(400).json({ message: 'Senha inválida' });
       }
 
       return res.json({

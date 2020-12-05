@@ -3,6 +3,15 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 class Users extends Model {
+  static associate(models){
+    this.hasOne(models.UserAddress,{
+      foreignKey: 'id_user',
+      as:'address',
+      onDelete:'CASCADE',
+      onUpdate:'CASCADE',
+      hooks: true,
+    })
+  }
   static init(sequelize) {
     super.init(
       {

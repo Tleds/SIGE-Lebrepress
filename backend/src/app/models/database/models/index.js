@@ -12,7 +12,7 @@ Orders.init(connection);
 Users.init(connection);
 UserAddress.init(connection);
 
-UserAddress.associate(connection.models);
+Users.associate(connection.models);
 
 
 module.exports = connection;

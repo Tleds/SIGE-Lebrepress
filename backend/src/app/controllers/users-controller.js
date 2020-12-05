@@ -5,12 +5,17 @@ class UsersController {
   async show(req,res){
     try{
       const response = await User.findByPk(req.userId,{
-        raw:true,
-        attributes:['id','cnpj','name']
+        attributes:['id','cnpj','name','api_key'],
+        include:[{
+          model: UserAddress,
+          as:'address',
+          attributes:['id','zip_code','street','number','complement','neighborhood','city','state']
+        }]
       });
 
       res.status(200).json(response);
     } catch(e){
+      console.log(e);
       res.status(500).json({
         message:'Erro interno no servidor, por favor, tente mais tarde'
       });
