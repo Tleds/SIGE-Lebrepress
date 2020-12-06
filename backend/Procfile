@@ -1,1 +1,2 @@
+backend: cd backend
 backend: yarn start
