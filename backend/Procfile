@@ -1,2 +1,1 @@
-backend: cd backend
-backend: yarn start
+backend: cd backend && yarn start
