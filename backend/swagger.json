@@ -15,6 +15,28 @@
   "consumes": [],
   "produces": [],
   "paths": {
+    "/orders/{id_order}": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_order",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/all_orders": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/orders": {
       "post": {
         "tags": [],
@@ -31,6 +53,12 @@
         "responses": {}
       },
       "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      },
+      "put": {
         "tags": [],
         "description": "",
         "parameters": [],
