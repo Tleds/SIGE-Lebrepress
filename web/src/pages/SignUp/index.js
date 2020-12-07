@@ -39,7 +39,6 @@ function SignUp(props) {
         zipCode === '' || 
         street === '' || 
         number === '' || 
-        complement === '' || 
         neighborhood === '' ||
         city === '' ||
         state === '' 
@@ -136,7 +135,7 @@ function SignUp(props) {
         type="number"
         onChange={(e)=>{setNumber(e.target.value)}}
       />
-      <Label>Complemento*</Label>
+      <Label>Complemento</Label>
       <Input 
         placeholder="Complemento"
         type="text"
