@@ -31,25 +31,6 @@ function Order(props) {
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
-      console.log(salesmanCode,
-        CNPJClient,
-        loadSize,
-        loadType,
-        cepOrigin,
-        addressOrigin,
-        numberOrigin,
-        complementOrigin,
-        neighborhoodOrigin,
-        cityOrigin,
-        stateOrigin,
-        cepDestiny,
-        addressDestiny,
-        numberDestiny,
-        complementDestiny,
-        neighborhoodOrigin,
-        cityDestiny,
-        stateDestiny
-      );
     const response = await api.post('/orders',{
         sales_man_code: salesmanCode,
         id_user: userData.id,
@@ -84,7 +65,6 @@ function Order(props) {
       })
     }
 
-    console.log(response.data);
   }
 
   const handleCEPOriginChange = async (cep)=>{
@@ -148,7 +128,6 @@ function Order(props) {
         },
         validateStatus: false,
       });
-      console.log(response.data)
       if(response.status === 401){
         props.history.push('/');
         return;

@@ -40,7 +40,6 @@ function UserArea(props) {
           <HeadItem>Tipo da carga</HeadItem>
           <HeadItem>Preço</HeadItem>
         </Head>
-        {console.log(orders)}
         {orders !== undefined ? orders.map(order=>(<>
           <Body>
             <BodyItem>{order.nfe_id}</BodyItem>
