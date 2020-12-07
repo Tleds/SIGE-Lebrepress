@@ -1,6 +1,4 @@
 const router = require('express').Router();
-const swaggerUI = require('swagger-ui-express');
-const swaggerFile = require('../swagger.json');
 
 const orders_controller = require('./app/controllers/orders-controller');
 const users_controller = require('./app/controllers/users-controller');
@@ -10,9 +8,6 @@ const checkJWTToken = require('./app/middlewares/checkJWTToken');
 const checkCreateUser = require('./app/middlewares/checkCreateUser');
 const checkSessionUser = require('./app/middlewares/checkSessionUser');
 const checkCNPJ = require('./app/middlewares/checkCNPJ');
-
-router.use('/docs', swaggerUI.serve);
-router.get('/docs', swaggerUI.setup(swaggerFile));
 
 router.get(
   '/orders/:id_order',
