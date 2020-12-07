@@ -65,7 +65,7 @@ function SignUp(props) {
         validateStatus:false,
       });
 
-      if(response.status === 200){
+      if(response.status === 200 || response.status === 204){
         localStorage.setItem('token',response.data.token);
         props.history.push('/user_area');
       }
